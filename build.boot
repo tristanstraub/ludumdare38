@@ -9,7 +9,9 @@
                           [adzerk/boot-test "1.2.0"]
                           [org.clojure/test.check "0.9.0"]
                           [crisptrutski/boot-cljs-test "0.3.0"]
-                          [zilti/boot-midje "0.1.2"]]
+                          [zilti/boot-midje "0.1.2"]
+                          [org.clojure/core.async "0.3.442"]
+                          [rum "0.10.8"]]
 
           :source-paths #{"src"}
           :resource-paths #{"resources"})
@@ -25,7 +27,12 @@
   (comp (garden :styles-var 'smallworld.styles/screen :output-to "public/style.css" :pretty-print (not production))
         ;; (file :path "public/index.html"
         ;;       :content (clojure.string/join "" (smallworld.index/index!)))
-        (apply cljs (when production [:optimizations :advanced]))
+        (apply cljs
+               (concat (when production [:optimizations :advanced])
+                       [:compiler-options {:foreign-libs [{:file "vendor/pixi.js"
+                                                           :provides ["PIXI"]}]
+                                           ;;:optimizations (when production :advanced)
+                                           :parallel-build true}]))
         (if production
           (sift :include #{#"public/(index.html|main.js|style.css)"})
           identity)))
