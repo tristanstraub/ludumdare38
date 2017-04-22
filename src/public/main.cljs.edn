@@ -1,0 +1,2 @@
+{:require  [smallworld.main]
+ :init-fns [smallworld.main/main]}
