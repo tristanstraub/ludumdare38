@@ -25,8 +25,6 @@
 
 (deftask build [p production bool "Enable production build"]
   (comp (garden :styles-var 'smallworld.styles/screen :output-to "public/style.css" :pretty-print (not production))
-        ;; (file :path "public/index.html"
-        ;;       :content (clojure.string/join "" (smallworld.index/index!)))
         (apply cljs
                (concat (when production [:optimizations :advanced])
                        [:compiler-options {:foreign-libs [{:file "vendor/pixi.js"
@@ -38,11 +36,12 @@
           identity)))
 
 (deftask dev [p production bool "Enable production build"]
-  (comp (watch)
-        (serve :dir "target/public")
+  (comp (serve :dir "public")
+        (watch)
         (reload :on-jsload 'smallworld.main/main)
         (build :production production)
-        (target)))
+        ;;(target)
+        ))
 
 (deftask release []
   (comp (build :production true)

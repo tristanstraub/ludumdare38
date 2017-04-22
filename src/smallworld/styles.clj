@@ -9,4 +9,4 @@
     :font-family "'Roboto', sans-serif"
     :height "100%"}]
   [:canvas
-   {:border "1px solid black"}])
+   {:margin "5px"}])
